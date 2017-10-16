@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="KeyboardListBug.Views.ViewA">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="BACK"  Command="{Binding BackCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <StackLayout>
+        <Editor HeightRequest="400" HorizontalOptions="FillAndExpand" />
+    </StackLayout>
+</ContentPage>

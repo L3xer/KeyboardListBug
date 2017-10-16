@@ -1,40 +1,49 @@
-﻿using Prism.Commands;
+﻿using MvvmHelpers;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System;
+using System.Threading.Tasks;
 
 namespace KeyboardListBug.ViewModels
 {
-    public class MainPageViewModel : BindableBase, INavigationAware
+    public class MainPageViewModel : BindableBase, INavigatingAware
     {
-        private string _title;
-        public string Title
+        public ObservableRangeCollection<string> Items { get; } = new ObservableRangeCollection<string>();
+
+        public DelegateCommand NextCommand { get; set; }
+
+        private bool _isRefreshing = true;
+        public bool IsRefreshing
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get { return _isRefreshing; }
+            set { SetProperty(ref _isRefreshing, value); }
         }
 
-        public MainPageViewModel()
-        {
+        private INavigationService _navigationService;
 
+        public MainPageViewModel(INavigationService navigationService)
+        {
+            _navigationService = navigationService;
+
+            NextCommand = new DelegateCommand(NextExecute);
         }
 
-        public void OnNavigatedFrom(NavigationParameters parameters)
+        private void NextExecute()
         {
-
+            _navigationService.NavigateAsync("ViewA");
         }
 
-        public void OnNavigatingTo(NavigationParameters parameters)
+        public async void OnNavigatingTo(NavigationParameters parameters)
         {
+            IsRefreshing = true;
 
-        }
+            await Task.Delay(1000);
 
-        public void OnNavigatedTo(NavigationParameters parameters)
-        {
-            if (parameters.ContainsKey("title"))
-                Title = (string)parameters["title"] + " and Prism";
+            Items.ReplaceRange(new List<string> { "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune" });
+
+            IsRefreshing = false;
         }
     }
 }
